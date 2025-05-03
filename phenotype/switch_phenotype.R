@@ -1,5 +1,5 @@
 #################################################################################
-# switch_Lo2024.R
+# switch_Lo2025.R
 #
 # Skeleton of function
 # 1. data wrangling
@@ -7,7 +7,7 @@
 # 3. identifying cases of first switch and controls
 #################################################################################
 
-#' Antidepressant switching phenotyping (Lo et al, 2024)
+#' Antidepressant switching phenotyping (Lo et al, 2025)
 #'
 #' @description
 #' This section summarises functions used in defining switching phenotypes described in:
@@ -15,7 +15,7 @@
 #' \emph{Antidepressant switching as a proxy phenotype for drug non-response: investigating
 #' clinical, demographic and genetic characteristics}
 #'
-#' For details, please refer to the MedRxiv preprint at \url{doi: https://doi.org/10.1101/2024.11.09.24316987}
+#' For details, please refer to the paper at \url{doi: https://doi.org/10.1016/j.bpsgos.2025.100502}
 #'
 #'
 #' This function performs data wrangling on prescriptions at long format, identifies quality-controlled drug switches, and assembles a case-control dataframe.
@@ -41,9 +41,9 @@
 #' @details
 #' The function works in the following steps:
 #' \itemize{
-#'   \item \code{wrangle_switch_Lo2024}: Concatenating prescriptions from wide to long format.
-#'   \item \code{switch_qc_Lo2024}: Identifying all switches, with quality control parameters.
-#'   \item \code{case_control_assemble_Lo2024}: Assemble a case-control dataframe.
+#'   \item \code{wrangle_switch_Lo2025}: Concatenating prescriptions from wide to long format.
+#'   \item \code{switch_qc_Lo2025}: Identifying all switches, with quality control parameters.
+#'   \item \code{case_control_assemble_Lo2025}: Assemble a case-control dataframe.
 #' }
 #'
 #' @return A data frame with the following columns:
@@ -63,11 +63,11 @@
 #' @importFrom tidyr unnest fill
 #' @importFrom data.table as.IDate
 #'
-#' @seealso \code{wrangle_switch_Lo2024}, \code{switch_qc_Lo2024}, \code{case_control_assemble_Lo2024}
+#' @seealso \code{wrangle_switch_Lo2025}, \code{switch_qc_Lo2025}, \code{case_control_assemble_Lo2025}
 #'
 #' @examples
 #' # Example usage:
-#' result <- switch_Lo2024(
+#' result <- switch_Lo2025(
 #'   df = rx_demo_1,
 #'   id_col = "ID", name_col = "drug", class_col = "class", date_col = "start_date",
 #'   time_switch = 90, nudge_days = 5,
@@ -77,7 +77,7 @@
 #'   consecutive_prescriptions_days_control = 30)
 #' @export
 
-switch_Lo2024 = function(df, id_col, name_col, class_col, date_col,
+switch_Lo2025 = function(df, id_col, name_col, class_col, date_col,
                          time_switch, nudge_days, pre_switch_count, post_switch_count, total_count,
                          identify_controls,
                          prescription_episode_days_control = NULL,
@@ -96,19 +96,19 @@ switch_Lo2024 = function(df, id_col, name_col, class_col, date_col,
   # Assuming the prescription dataframe is in wide format, where:
   # every row is a prescription
   # =========================================== #
-  wrangled_df = wrangle_switch_Lo2024(df = rx_df, id_col = id_col, name_col = name_col, class_col = class_col, date_col = date_col) %>% ungroup()
+  wrangled_df = wrangle_switch_Lo2025(df = rx_df, id_col = id_col, name_col = name_col, class_col = class_col, date_col = date_col) %>% ungroup()
 
   # =========================================== #
   ### --- Get all QC-ed switches --- ###
   # =========================================== #
-  switch_df = switch_qc_Lo2024(df = wrangled_df, time = time_switch, nudge_days = nudge_days, id_col = id_col,
+  switch_df = switch_qc_Lo2025(df = wrangled_df, time = time_switch, nudge_days = nudge_days, id_col = id_col,
                         name_col = "drug_names", class_col = "drug_classes", date_col = "drug_dates",
                       pre_switch_count = pre_switch_count, post_switch_count = post_switch_count,
                       total_count = total_count, pheno_col_only = F)
   # =========================================== #
   ### --- Take out cases and controls for first switch, and write as dataframe -- ###
   # =========================================== #
-  phenotype = case_control_assemble_Lo2024(df = switch_df, id_col = id_col, name_col = "drug_names", class_col = "drug_classes",
+  phenotype = case_control_assemble_Lo2025(df = switch_df, id_col = id_col, name_col = "drug_names", class_col = "drug_classes",
                                     identify_controls = identify_controls,
                                     prescription_episode_days = prescription_episode_days_control,
                                     consecutive_prescriptions_days = consecutive_prescriptions_days_control,
@@ -147,13 +147,13 @@ switch_Lo2024 = function(df, id_col, name_col, class_col, date_col,
 #' )
 #'
 #' # Wrangle data
-#' result <- wrangle_switch_Lo2024(df, "patient_id", "drug_name", "drug_class", "date")
+#' result <- wrangle_switch_Lo2025(df, "patient_id", "drug_name", "drug_class", "date")
 #'
 #' @importFrom dplyr group_by arrange mutate distinct
 #' @importFrom rlang sym
 #' @export
 
-wrangle_switch_Lo2024 = function(df, id_col, name_col, class_col, date_col) {
+wrangle_switch_Lo2025 = function(df, id_col, name_col, class_col, date_col) {
   data = df %>%
     dplyr::group_by(!!rlang::sym(id_col)) %>%
     dplyr::arrange(!!rlang::sym(id_col), !!rlang::sym(date_col), !!rlang::sym(name_col)) %>%
@@ -167,7 +167,7 @@ wrangle_switch_Lo2024 = function(df, id_col, name_col, class_col, date_col) {
 #' Identifying drug-switching events from prescription records
 #'
 #' This function identifies drug-switching events for a dataframe of prescriptions,
-#' after running the wrangle_switch_Lo2024() function.
+#' after running the wrangle_switch_Lo2025() function.
 #'
 #' It captures "switching events" based on specified time windows between prescriptions of different drugs.
 #'
@@ -228,10 +228,10 @@ wrangle_switch_Lo2024 = function(df, id_col, name_col, class_col, date_col) {
 #' #[1] 31  8
 #'
 #' # Apply wrangling function
-#' rx_wrangle = wrangle_switch_Lo2024(rx_demo_1, "ID", "drug", "class", "start_date")
+#' rx_wrangle = wrangle_switch_Lo2025(rx_demo_1, "ID", "drug", "class", "start_date")
 #'
 #' # Apply switching function
-#' rx_switch = switch_qc_Lo2024(
+#' rx_switch = switch_qc_Lo2025(
 #'   rx_wrangle, time = 90, nudge_days = 5,
 #'   id_col = "ID", name_col = "drug_names", class_col = "drug_classes",
 #'   date_col = "drug_dates",
@@ -239,7 +239,7 @@ wrangle_switch_Lo2024 = function(df, id_col, name_col, class_col, date_col) {
 #' )
 #' @export
 
-switch_qc_Lo2024 <- function(df, time, nudge_days,
+switch_qc_Lo2025 <- function(df, time, nudge_days,
                       id_col, name_col, class_col, date_col,
                       pre_switch_count, post_switch_count, total_count, pheno_col_only = F) {
 
@@ -260,9 +260,9 @@ switch_qc_Lo2024 <- function(df, time, nudge_days,
     ## drug class for non-qced drug switches
     class_switch = unlist(strsplit(as.character(df["all_switch_classes"]), ";"))
     # all drug prescriptions
-    drg_all=unlist(strsplit(as.character(df["drug_names"]), ";"))
+    drg_all=unlist(strsplit(as.character(df["name_draft"]), ";"))
     # date of drug prescriptions
-    kp_all = unlist(strsplit(as.character(df["drug_dates"]), ";"))
+    kp_all = unlist(strsplit(as.character(df["date_draft"]), ";"))
     # date of switching
     kp_switch = unlist(strsplit(as.character(df["all_switch_dates"]), ";"))
     # indices of time switching within gap specified
@@ -337,25 +337,26 @@ switch_qc_Lo2024 <- function(df, time, nudge_days,
 
 
   data = df %>%
-    dplyr::rename(name_col = !!rlang::sym(name_col), class_col = !!rlang::sym(class_col), date_col = !!rlang::sym(date_col)) %>%
+    dplyr::rename(name_draft = !!rlang::sym(name_col), class_draft = !!rlang::sym(class_col), date_draft = !!rlang::sym(date_col)) %>%
     dplyr::rowwise() %>%
     # Non QC-ed switches
-    dplyr::mutate(all_switch_names = {drg = unlist(strsplit(as.character(name_col), ";"))
+    dplyr::mutate(all_switch_names = {drg = unlist(strsplit(as.character(name_draft), ";"))
     n= which(drg[-1] != drg[-length(drg)]) + 1    # identifies changes in drugs/ when different drugs are prescribed
     paste(c(drg[n[1] - 1], drg[n]), collapse = ";") }, # pulls out drug change journey
-    all_switch_classes = {drg = unlist(strsplit(as.character(name_col), ";"))      # pull out all prescriptions (by drug)
-    class = unlist(strsplit(as.character(class_col), ";"))  # pull out all prescriptions (by class)
+    all_switch_classes = {drg = unlist(strsplit(as.character(name_draft), ";"))      # pull out all prescriptions (by drug)
+    class = unlist(strsplit(as.character(class_draft), ";"))  # pull out all prescriptions (by class)
     n= which(drg[-1] != drg[-length(drg)]) + 1    # identifies changes in drug when different drugs are prescribed
     paste(c(class[n[1] - 1], class[n]), collapse = ";") }, # pulls out respective classes in the drug change journey
-    all_switch_dates = {kp = unlist(strsplit(as.character(date_col), ";"))
-    drg = unlist(strsplit(as.character(name_col), ";"))
+    all_switch_dates = {kp = unlist(strsplit(as.character(date_draft), ";"))
+    drg = unlist(strsplit(as.character(name_draft), ";"))
     n= which(drg[-1] != drg[-length(drg)]) + 1
     paste(kp[n], collapse = ";") }) %>%
     # Time between switches for all these non-qced switch
     dplyr::mutate(time_bw_switches = {kp_s = unlist(strsplit(as.character(all_switch_dates), ";"))  # switching dates
-    kp = unlist(strsplit(as.character(date_col), ";"))  # drug dates (used to obtain first prescription)
+    kp = unlist(strsplit(as.character(date_draft), ";"))  # drug dates (used to obtain first prescription)
     kp_s= c(kp[1], kp_s)    # initial drug prescription + all switch dates
-    paste(round(difftime(kp_s[-1], kp_s[-length(kp_s)], units = "days"), 1), collapse = ";") })
+    paste(round(difftime(kp_s[-1], kp_s[-length(kp_s)], units = "days"), 1), collapse = ";") }) %>%
+    dplyr::ungroup()
 
   # apply complementary functions to each row, to get the details of QC-ed switching
   # drug name
@@ -377,7 +378,7 @@ switch_qc_Lo2024 <- function(df, time, nudge_days,
                                                         parameter = "time")})
   # rename variables
   data = data %>% dplyr::ungroup() %>%
-    dplyr::rename(!!rlang::sym(name_col) := name_col, !!rlang::sym(class_col) := class_col, !!rlang::sym(date_col) := date_col)
+    dplyr::rename(!!rlang::sym(name_col) := name_draft, !!rlang::sym(class_col) := class_draft, !!rlang::sym(date_col) := date_draft)
 
   # convert "" to NA
   data <- data %>%
@@ -397,14 +398,14 @@ switch_qc_Lo2024 <- function(df, time, nudge_days,
   return(data)
 }
 
-#' Assemble switchers and non-switchers (Lo et al, 2024)
+#' Assemble switchers and non-switchers (Lo et al, 2025)
 #'
-#' This function identifies "switchers" and "non-switchers" based on dataframes produced from \code{switch_qc_Lo2024()}.
+#' This function identifies "switchers" and "non-switchers" based on dataframes produced from \code{switch_qc_Lo2025()}.
 #'
-#' Details of "switchers" and "non-switchers" identification were described in the preprint: \emph{Antidepressant switching as a proxy phenotype for drug non-response: investigating
+#' Details of "switchers" and "non-switchers" identification were described in the paper: \emph{Antidepressant switching as a proxy phenotype for drug non-response: investigating
 #' clinical, demographic and genetic characteristics}
 #'
-#' For details, please refer to the MedRxiv preprint at \url{doi: https://doi.org/10.1101/2024.11.09.24316987}
+#' For details, please refer to the paper at \url{doi: https://doi.org/10.1016/j.bpsgos.2025.100502}
 #'
 #' The function returns a phenotype dataset
 #' with switchers and non-switcher assignments and related details.
@@ -454,10 +455,10 @@ switch_qc_Lo2024 <- function(df, time, nudge_days,
 #' #[1] 31  8
 #'
 #' # Apply wrangling function
-#' rx_wrangle = wrangle_switch_Lo2024(rx_demo_1, "ID", "drug", "class", "start_date")
+#' rx_wrangle = wrangle_switch_Lo2025(rx_demo_1, "ID", "drug", "class", "start_date")
 #'
 #' # Apply switching function
-#' rx_switch = switch_qc_Lo2024(
+#' rx_switch = switch_qc_Lo2025(
 #'   rx_wrangle, time = 90, nudge_days = 5,
 #'   id_col = "ID", name_col = "drug_names", class_col = "drug_classes",
 #'   date_col = "drug_dates",
@@ -465,14 +466,14 @@ switch_qc_Lo2024 <- function(df, time, nudge_days,
 #' )
 #'
 #' # Apply case-control assembling function
-#' phenotype = case_control_assemble_Lo2024(df = rx_switch, id_col = "ID",
+#' phenotype = case_control_assemble_Lo2025(df = rx_switch, id_col = "ID",
 #'                                   name_col = "drug_names", class_col = "drug_classes",
 #'                                   identify_controls = TRUE,
 #'                                   prescription_episode_days = 180,
 #'                                   consecutive_prescriptions_days = 90, class_filter = "SSRI")
 #' @export
 
-case_control_assemble_Lo2024 = function(df, id_col, name_col, class_col,
+case_control_assemble_Lo2025 = function(df, id_col, name_col, class_col,
                                  prescription_episode_days = NULL, consecutive_prescriptions_days = NULL,
                                  identify_controls,
                                  class_filter = NULL) {
@@ -525,7 +526,7 @@ case_control_assemble_Lo2024 = function(df, id_col, name_col, class_col,
   case <- df %>%
     dplyr::rename(pt_id = !!rlang::sym(id_col)) %>%
     dplyr::mutate(n_switch = ifelse(is.na(switch_drug), 0 ,stringr::str_count(switch_drug, ";")+1)) %>%
-    dplyr::mutate(switch_date = data.table::as.IDate(switch_date)) %>%
+    dplyr::mutate(switch_date = as.character(switch_date)) %>%
     dplyr::mutate(cc = ifelse(n_switch == 0, "no_switch", "case")) %>%
     dplyr::filter(cc == "case")
 
