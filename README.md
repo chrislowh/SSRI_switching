@@ -1,8 +1,8 @@
-# Antidepressant switching as a proxy phenotype for drug non-response: Investigating clinical, demographic and genetic characteristics
+# Antidepressant Switching as a Proxy Phenotype for Drug Nonresponse: Investigating Clinical, Demographic, and Genetic Characteristics
 
-### This repository includes the R scripts  to create switching phenotype and perform genetic analyses in the study: 
-#### Lo et al, 2024. Antidepressant switching as a proxy phenotype for drug non-response: Investigating clinical, demographic and genetic characteristics. medRxiv 
-#### available at doi: https://doi.org/10.1101/2020.08.24.20178715](https://doi.org/10.1101/2024.11.09.24316987)
+### This repository includes the R scripts to create switching phenotype and perform genetic analyses in the study: 
+### Lo et al, 2025. Antidepressant Switching as a Proxy Phenotype for Drug Nonresponse: Investigating Clinical, Demographic, and Genetic Characteristics. Biol Psychiatry Glob Open Sci. 
+#### available at doi: [https://doi.org/10.1016/j.bpsgos.2025.100502](https://doi.org/10.1016/j.bpsgos.2025.100502)
 
 <br>
 
